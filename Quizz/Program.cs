@@ -7,8 +7,11 @@ namespace Quizz
         static void Main(string[] args)
         {
             Quizz quizz = new Quizz();
-            Question q = new Question() { q = "test", answer = "test?"};
-            quizz.addQuestion(q);
+            Question question = new Question() { question = "test?", answer = "test"};
+            quizz.AddQuestion(question);
+            quizz.AddQuestion(question);
+            quizz.AddQuestion(question);
+            quizz.ExecuteQuizz();
         }
     }
 }
