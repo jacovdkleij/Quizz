@@ -38,6 +38,7 @@ namespace Quizz
 
         public void ExecuteQuizz()
         {
+            var result = _questions.OrderBy(q => q.difficulty);
             foreach (Question _question in _questions)
             {
                 ExecuteQuestion(_question);
@@ -45,20 +46,10 @@ namespace Quizz
             printResults();
         }
 
-        public void ExecuteQuizzByDifficulty()
+        public void ExecuteQuizz(int value)
         {
-            var result = _questions.OrderBy(q => q.difficulty);
-
-            foreach (var _question in result)
-            {
-                ExecuteQuestion(_question);
-            }
-            printResults();
-        }
-
-        public void ExecuteQuizzWhere(int value)
-        {
-            IEnumerable<Question> result = _questions.Where(q => q.difficulty == value);
+            var _result = _questions.OrderBy(q => q.difficulty);
+            IEnumerable<Question> result = _result.Where(q => q.difficulty == value);
             
             foreach (Question _question in result)
             {
@@ -67,9 +58,10 @@ namespace Quizz
             printResults();
         }
 
-        public void ExecuteQuizzWhere(String value)
+        public void ExecuteQuizz(String value)
         {
-            IEnumerable<Question> result = _questions.Where(q => q.category == value);
+            var _result = _questions.OrderBy(q => q.difficulty);
+            IEnumerable<Question> result = _result.Where(q => q.category == value);
 
             foreach (Question _question in result)
             {
@@ -78,15 +70,34 @@ namespace Quizz
             printResults();
         }
 
-        public void ExecuteQuestion(Question q)
+        public void ExecuteQuizz(String cat, int diff)
+        {
+            var _result = _questions.OrderBy(q => q.difficulty);
+            IEnumerable<Question> result = _result.Where(q => q.category == cat && q.difficulty == diff);
+
+            foreach (Question _question in result)
+            {
+                ExecuteQuestion(_question);
+            }
+            printResults();
+        }
+
+        private void ExecuteQuestion(Question q)
         {
             Console.WriteLine(q.question);
+            if (q.isMultipleChoice())
+            {
+                char[] alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
+                int i = 0;
+                foreach (string choiceAnswer in q.multipleChoiceAnswers)
+                {
+                    Console.WriteLine(alpha[i]+ ": " + choiceAnswer);
+                    i++;
+                }
+            }
             String userAnswer = Console.ReadLine();
             userAnswers.Add(userAnswer);
-            if (userAnswer.Equals(q.answer))
-            {
-                correctAnswers++;
-            }
+            q.checkAnswer(userAnswer);
             Console.WriteLine("-----------");
         }
     }
